@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "577738206634",
+    "project_id": "tourathne-2e423-46802",
+    "storage_bucket": "tourathne-2e423-46802.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577738206634:android:fa686970f2e61a348bcfd3",
+        "android_client_info": {
+          "package_name": "com.example.patrimoine_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHrREyakH2GvBLxOmgDzqJgvzpeKQabS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
