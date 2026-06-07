@@ -45,8 +45,8 @@ class AuthService {
           .doc(uid)
           .get(const GetOptions(source: Source.server))
           .timeout(const Duration(seconds: 8));
+
       if (!doc.exists) {
-        // مستخدم غير مسجل في users → نسجله كـ user
         await _db.collection('users').doc(uid).set({
           'email': _auth.currentUser?.email ?? '',
           'role': 'user',
@@ -54,8 +54,10 @@ class AuthService {
         });
         return 'user';
       }
+
       final role = (doc.data()?['role'] ?? 'user').toString();
-      return role;
+      if (role == 'admin') return 'admin';
+      return 'user';
     } catch (e) {
       return 'user';
     }

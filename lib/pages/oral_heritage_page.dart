@@ -24,24 +24,23 @@ class OralHeritagePage extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF8E4A24), Color(0xFF6C3B1F)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    'https://i.ytimg.com/vi/_teD0Psg8vA/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGeB4AC0AWKAgwIABABGH8gWigrMA8=&rs=AOn4CLBoEiul6Gbl0Vlz4WWm7UDDzkNUng',
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        Container(color: const Color(0xFF8E4A24)),
                   ),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.record_voice_over_rounded,
-                    size: 80,
-                    color: Colors.white24,
+                  Container(
+                    color: const Color(0xFF8E4A24).withValues(alpha: 0.55),
                   ),
-                ),
+                ],
               ),
             ),
           ),
+
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(14),
@@ -186,30 +185,40 @@ class InstrumentsPage extends StatelessWidget {
             description: isAr
                 ? 'آلة وترية تقليدية موريتانية تشبه العود، تُعزف باليد وتُصنع من الخشب والجلد. تُعدّ من أهم الآلات في الغناء الحساني.'
                 : 'Instrument à cordes traditionnel mauritanien semblable à un luth, joué à la main et fabriqué en bois et cuir. C\'est l\'un des instruments les plus importants du Ghina Hassani.',
+            imageUrl:
+                'https://www.tidinit.net/wp-content/uploads/2024/10/2.png',
           ),
           _InstrumentCard(
             name: 'Ardin — الآردين',
             description: isAr
                 ? 'آلة وترية نسائية بامتياز، تشبه القيثارة وتُعزف من قِبل النساء. تتميز بصوتها الرقيق وارتباطها بالتبراع.'
                 : 'Instrument à cordes par excellence féminin, ressemblant à une harpe, joué par les femmes. Il se distingue par son son délicat et son lien avec le Tebra\'.',
+            imageUrl:
+                'https://alwiam.info/sites/default/files/IMG_20241102_235927.jpg',
           ),
           _InstrumentCard(
             name: 'Tambour — الطبل',
             description: isAr
                 ? 'آلة إيقاعية جلدية تُستخدم في المناسبات والأفراح والسهرات الحسانية، وتضبط الإيقاع في الغناء الجماعي.'
                 : 'Instrument de percussion en cuir utilisé lors des fêtes et soirées hassanies. Il rythme le chant collectif.',
+            imageUrl:
+                'https://tse3.mm.bing.net/th/id/OIP.Sybnpv27ZRa5Nspv1tBImwHaHa?r=0&cb=thfvnextfalcon&rs=1&pid=ImgDetMain&o=7&rm=3',
           ),
           _InstrumentCard(
             name: 'Nifara — النيفارة',
             description: isAr
                 ? 'آلة نفخية تقليدية تُصنع من الخشب، تُستخدم في بعض المناسبات والأعياد الموريتانية.'
                 : 'Instrument à vent traditionnel fabriqué en bois, utilisé lors de certaines occasions et fêtes mauritaniennes.',
+            imageUrl:
+                'https://s.raseef22.com/storage/attachments/1077/Neifara1_312142.jpg/r/800/image.jpg',
           ),
           _InstrumentCard(
             name: 'Arba — أرباب',
             description: isAr
                 ? 'آلة وترية ذات وتر واحد، من أقدم الآلات الموريتانية، تُصنع يدوياً من الخشب والجلد.'
                 : 'Instrument à une seule corde, parmi les plus anciens de Mauritanie, fabriqué à la main en bois et cuir.',
+            imageUrl:
+                'https://albawaabh.com/wp-content/uploads/2025/06/image-10-14.webp',
           ),
         ],
       ),
