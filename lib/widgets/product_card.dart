@@ -8,10 +8,16 @@ import '../l10n/app_localizations.dart';
 import '../models/product.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.product, required this.onAdd});
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.onAdd,
+    this.isAdmin = false,
+  });
 
   final Product product;
   final VoidCallback onAdd;
+  final bool isAdmin;
 
   Widget _buildProductImage(ThemeData theme) {
     final image = product.imageUrl.trim();
@@ -21,7 +27,6 @@ class ProductCard extends StatelessWidget {
         return Image.memory(base64Decode(raw), fit: BoxFit.cover);
       } catch (_) {}
     }
-    // Use CachedNetworkImage for better caching and performance
     return CachedNetworkImage(
       imageUrl: image,
       fit: BoxFit.cover,
@@ -34,7 +39,6 @@ class ProductCard extends StatelessWidget {
         alignment: Alignment.center,
         child: const Icon(Icons.image_not_supported_outlined),
       ),
-      // Cache settings
       memCacheWidth: 400,
       memCacheHeight: 400,
     );
@@ -46,7 +50,6 @@ class ProductCard extends StatelessWidget {
     final loc = AppLocalizations.of(context);
     final currentLocale = loc.locale.languageCode;
 
-    // Get localized content
     final title = product.getLocalizedTitle(currentLocale);
     final description = product.getLocalizedDescription(currentLocale);
 
@@ -68,9 +71,7 @@ class ProductCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.55),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.55)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(5),
@@ -162,25 +163,27 @@ class ProductCard extends StatelessWidget {
                     style: theme.textTheme.labelSmall?.copyWith(fontSize: 6.5),
                   ),
                   const SizedBox(height: 3),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: product.stock > 0 ? onAdd : null,
-                      style: FilledButton.styleFrom(
-                        minimumSize: const Size.fromHeight(22),
-                        padding: EdgeInsets.zero,
-                        textStyle: const TextStyle(
-                          fontSize: 8.5,
-                          fontWeight: FontWeight.w600,
+                  // ── زر Ajouter للمستخدم فقط ──
+                  if (!isAdmin)
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: product.stock > 0 ? onAdd : null,
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(22),
+                          padding: EdgeInsets.zero,
+                          textStyle: const TextStyle(
+                            fontSize: 8.5,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        child: Text(
+                          product.stock > 0
+                              ? loc.translate('add')
+                              : loc.translate('outOfStock'),
                         ),
                       ),
-                      child: Text(
-                        product.stock > 0
-                            ? loc.translate('add')
-                            : loc.translate('outOfStock'),
-                      ),
                     ),
-                  ),
                 ],
               ),
             ),

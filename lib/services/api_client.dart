@@ -30,7 +30,7 @@ class ApiClient {
     final list = (data['products'] as List<dynamic>? ?? const <dynamic>[]);
     return list
         .whereType<Map<String, dynamic>>()
-        .map(Product.fromJson)
+        .map((item) => Product.fromJson(item))
         .toList();
   }
 

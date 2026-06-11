@@ -10,17 +10,20 @@ class ShopPage extends StatelessWidget {
     required this.products,
     required this.onAddToCart,
     this.errorMessage,
+    this.isAdmin = false,
   });
 
   final List<Product> products;
   final void Function(Product product) onAddToCart;
   final String? errorMessage;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     final width = MediaQuery.of(context).size.width;
     final columns = width < 650 ? 2 : 3;
+
     if (products.isEmpty) {
       return Center(
         child: Padding(
@@ -48,6 +51,7 @@ class ShopPage extends StatelessWidget {
         ),
       );
     }
+
     return GridView.builder(
       padding: const EdgeInsets.all(12),
       itemCount: products.length,
@@ -73,10 +77,11 @@ class ShopPage extends StatelessWidget {
             );
           },
           child: _TouchLift(
-            onTap: () => onAddToCart(product),
+            onTap: isAdmin ? () {} : () => onAddToCart(product),
             child: ProductCard(
               product: product,
               onAdd: () => onAddToCart(product),
+              isAdmin: isAdmin,
             ),
           ),
         );

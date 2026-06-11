@@ -30,7 +30,7 @@ class LocalStorageService {
         return [];
       }
       final List<dynamic> productsJson = jsonDecode(productsString);
-      return productsJson.map((json) => Product.fromJson(json)).toList();
+      return productsJson.map((json) => Product.fromJson(json as Map<String, dynamic>)).toList();
     } catch (e) {
       return [];
     }

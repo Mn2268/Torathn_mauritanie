@@ -108,7 +108,7 @@ class ShopRootPage extends StatefulWidget {
 
 class _ShopRootPageState extends State<ShopRootPage> {
   int _selectedTab = 0;
-  String _userRole = 'guest'; // 'guest' | 'user' | 'admin'
+  String _userRole = 'guest';
   bool _loggedIn = false;
 
   ShopController get _controller =>
@@ -117,9 +117,8 @@ class _ShopRootPageState extends State<ShopRootPage> {
   bool get _isAdmin => _userRole == 'admin';
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _addToCart(Product product) {
@@ -164,7 +163,6 @@ class _ShopRootPageState extends State<ShopRootPage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
 
-    // إذا غير مسجل — اعرض صفحة Login
     if (!_loggedIn) {
       return LoginPage(onSuccess: _onLoginSuccess);
     }
@@ -172,88 +170,93 @@ class _ShopRootPageState extends State<ShopRootPage> {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
-        // قائمة الصفحات حسب الدور
+        // ── قائمة الصفحات حسب الدور ──
         final pages = <Widget>[
           HomePage(onOpenShop: () => setState(() => _selectedTab = 1)),
           ShopPage(
             products: _controller.products,
             onAddToCart: _addToCart,
             errorMessage: _controller.lastError,
+            isAdmin: _isAdmin,
+          
+            
           ),
-          CartPage(
-            items: _controller.cartItems,
-            totalPrice: _controller.totalPrice,
-            onUpdateQuantity: _controller.updateQuantity,
-          ),
-          CheckoutPage(
-            items: _controller.cartItems,
-            totalPrice: _controller.totalPrice,
-            onPlaceOrder: _placeOrder,
-          ),
+          // السلة والطلب للمستخدم فقط
+          if (!_isAdmin)
+            CartPage(
+              items: _controller.cartItems,
+              totalPrice: _controller.totalPrice,
+              onUpdateQuantity: _controller.updateQuantity,
+            ),
+          if (!_isAdmin)
+            CheckoutPage(
+              items: _controller.cartItems,
+              totalPrice: _controller.totalPrice,
+              onPlaceOrder: _placeOrder,
+            ),
           if (!_isAdmin) const MyOrdersPage(),
+          // صفحات الأدمن فقط
           if (_isAdmin)
             AdminPage(
               products: _controller.products,
-              onAddProduct:
-                  ({
-                    required String imageUrl,
-                    required String title,
-                    required String titleAr,
-                    required String description,
-                    required String descriptionAr,
-                    required double price,
-                    required int discountPercent,
-                    required int stock,
-                    required String category,
-                    required String categoryAr,
-                  }) {
-                    return _controller.addProduct(
-                      imageUrl: imageUrl,
-                      title: title,
-                      titleAr: titleAr,
-                      description: description,
-                      descriptionAr: descriptionAr,
-                      price: price,
-                      discountPercent: discountPercent,
-                      stock: stock,
-                      category: category,
-                      categoryAr: categoryAr,
-                    );
-                  },
-              onUpdateProduct:
-                  ({
-                    required int id,
-                    required String imageUrl,
-                    required String title,
-                    required String titleAr,
-                    required String description,
-                    required String descriptionAr,
-                    required double price,
-                    required int discountPercent,
-                    required int stock,
-                    required String category,
-                    required String categoryAr,
-                  }) {
-                    return _controller.updateProduct(
-                      id: id,
-                      imageUrl: imageUrl,
-                      title: title,
-                      titleAr: titleAr,
-                      description: description,
-                      descriptionAr: descriptionAr,
-                      price: price,
-                      discountPercent: discountPercent,
-                      stock: stock,
-                      category: category,
-                      categoryAr: categoryAr,
-                    );
-                  },
+              onAddProduct: ({
+                required String imageUrl,
+                required String title,
+                required String titleAr,
+                required String description,
+                required String descriptionAr,
+                required double price,
+                required int discountPercent,
+                required int stock,
+                required String category,
+                required String categoryAr,
+              }) {
+                return _controller.addProduct(
+                  imageUrl: imageUrl,
+                  title: title,
+                  titleAr: titleAr,
+                  description: description,
+                  descriptionAr: descriptionAr,
+                  price: price,
+                  discountPercent: discountPercent,
+                  stock: stock,
+                  category: category,
+                  categoryAr: categoryAr,
+                );
+              },
+              onUpdateProduct: ({
+                required int id,
+                required String imageUrl,
+                required String title,
+                required String titleAr,
+                required String description,
+                required String descriptionAr,
+                required double price,
+                required int discountPercent,
+                required int stock,
+                required String category,
+                required String categoryAr,
+              }) {
+                return _controller.updateProduct(
+                  id: id,
+                  imageUrl: imageUrl,
+                  title: title,
+                  titleAr: titleAr,
+                  description: description,
+                  descriptionAr: descriptionAr,
+                  price: price,
+                  discountPercent: discountPercent,
+                  stock: stock,
+                  category: category,
+                  categoryAr: categoryAr,
+                );
+              },
               onDeleteProduct: _controller.deleteProduct,
             ),
           if (_isAdmin) const OrdersPage(),
         ];
 
-        // قائمة التنقل حسب الدور
+        // ── قائمة التنقل حسب الدور ──
         final destinations = <NavigationDestination>[
           NavigationDestination(
             icon: const Icon(Icons.home),
@@ -263,14 +266,16 @@ class _ShopRootPageState extends State<ShopRootPage> {
             icon: const Icon(Icons.store),
             label: loc.translate('products'),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.shopping_bag),
-            label: loc.translate('cart'),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.payment),
-            label: loc.translate('checkout'),
-          ),
+          if (!_isAdmin)
+            NavigationDestination(
+              icon: const Icon(Icons.shopping_bag),
+              label: loc.translate('cart'),
+            ),
+          if (!_isAdmin)
+            NavigationDestination(
+              icon: const Icon(Icons.payment),
+              label: loc.translate('checkout'),
+            ),
           if (!_isAdmin)
             NavigationDestination(
               icon: const Icon(Icons.receipt_long_outlined),
@@ -288,24 +293,24 @@ class _ShopRootPageState extends State<ShopRootPage> {
             ),
         ];
 
-        // تأكد أن _selectedTab لا يتجاوز عدد الصفحات
         final safeTab = _selectedTab.clamp(0, pages.length - 1);
 
         return Scaffold(
           appBar: AppBar(
             title: Text(loc.translate('appTitle')),
             actions: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Chip(
-                  side: BorderSide.none,
-                  backgroundColor: Colors.white,
-                  label: Text(
-                    '${loc.translate('cart')}: ${_controller.cartCount}',
+              if (!_isAdmin)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Chip(
+                    side: BorderSide.none,
+                    backgroundColor: Colors.white,
+                    label: Text(
+                      '${loc.translate('cart')}: ${_controller.cartCount}',
+                    ),
+                    avatar: const Icon(Icons.shopping_cart_outlined, size: 18),
                   ),
-                  avatar: const Icon(Icons.shopping_cart_outlined, size: 18),
                 ),
-              ),
               IconButton(
                 tooltip: loc.translate('language'),
                 onPressed: widget.onToggleLocale,
@@ -316,9 +321,10 @@ class _ShopRootPageState extends State<ShopRootPage> {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(999),
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.12),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.12),
                   ),
                   child: Text(
                     widget.locale.languageCode.toUpperCase(),
